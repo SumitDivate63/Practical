@@ -78,10 +78,11 @@ public class Portfolio {
             """;
 
     public static void main(String[] args) throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", 8080), 0);
+        int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
+        HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", port), 0);
         server.createContext("/", Portfolio::handleRequest);
         server.start();
-        System.out.println("Portfolio is running at http://localhost:8080");
+        System.out.println("Portfolio is running at http://localhost:" + port);
     }
 
     private static void handleRequest(HttpExchange exchange) throws IOException {
