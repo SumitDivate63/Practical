@@ -1,12 +1,10 @@
-FROM maven:3.9.9-eclipse-temurin-21 AS build
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
-COPY pom.xml .
-RUN mvn -B dependency:go-offline
-COPY src ./src
-RUN mvn -B package -DskipTests
+COPY Portfolio.java .
+RUN javac --add-modules jdk.httpserver Portfolio.java
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=build /app/target/personal-portfolio-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/Portfolio.class .
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "--add-modules", "jdk.httpserver", "Portfolio"]
